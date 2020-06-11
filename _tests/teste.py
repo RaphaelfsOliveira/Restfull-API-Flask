@@ -1,16 +1,25 @@
-class Person:
+class Book:
+    TYPES = ('hardcover', 'paperback')
 
-    def __init__(self, name, age):
+    def __init__(self, name, book_type, weight):
         self.name = name
-        self.age = age
-    
-    def __str__(self):
-        return 'Person {}, {} years old'.format(self.name, self.age)
+        self.book_type = book_type
+        self.weight = weight
     
     def __repr__(self):
-        return '<Person({}, {})>'.format(self.name, self.age)
+        return f"<Book {self.name}, {self.book_type}, weight {self.weight}>"
+    
+    @classmethod
+    def hardcover(cls, name, page_weight):
+        return cls(name, cls.TYPES[0], page_weight + 200)
+    
+    @classmethod
+    def paperback(cls, name, page_weight):
+        return cls(name, cls.TYPES[1], page_weight)
 
 
-bob = Person('bob', 33)
-print(bob)
-bob.__repr__()
+book = Book.hardcover('memórias do subsolo', 200)
+light = Book.paperback('Python 101', 50)
+
+print(book)
+print(light)
