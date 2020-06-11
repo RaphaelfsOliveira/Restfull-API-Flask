@@ -1,6 +1,6 @@
-def divide(dividend: int ,divisor: int) -> int:
+def divide(dividend: float ,divisor: float) -> float:
     return dividend / divisor
 
 print('my_module', __name__)
 
-print(divide(12.3, 4.7))
+print(divide(10.5, 2.3))
