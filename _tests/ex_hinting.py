@@ -22,3 +22,13 @@ print(book, book2)
 book_shelf = BookShelf([book, book2])
 
 print(book_shelf)
+
+
+# python Hinting
+def avg_list(sequence: List) -> float:
+    return sum(sequence) / len(sequence)
+
+print(
+    avg_list([1,2,3,4])
+)
+
