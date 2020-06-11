@@ -5,7 +5,7 @@ class Device:
         self.connected = True
     
     def __str__(self):
-        return f"Device {self.name!r} ({self.connected_by})"
+        return f"{self.__class__.__name__} {self.name!r} ({self.connected_by})"
     
     def disconnect(self):
         self.connected = False
