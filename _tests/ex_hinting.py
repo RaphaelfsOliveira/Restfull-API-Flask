@@ -1,3 +1,8 @@
+"""
+python Hinting
+https://docs.python.org/3/library/typing.html
+"""
+# python Hinting
 from typing import List # Tuple, Set, etc ...
 
 class Book:
