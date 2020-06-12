@@ -6,9 +6,9 @@ user = {'username': 'jose', 'access_level': 'guest'}
 def make_secure(func):
     
     @functools.wraps(func)
-    def secure_function():
+    def secure_function(*args, **kwargs):
         if user['access_level'] == 'admin':
-            return func()
+            return func(*args, **kwargs)
         else:
             return f"No admin permissions for {user['username']}"
 
@@ -16,14 +16,18 @@ def make_secure(func):
 
 
 @make_secure
-def get_admin_password():
-    return '1234'
+def get_admin_password(panel):
+    if panel == 'admin':
+        return '1234'
+    elif panel == 'billing':
+        return 'super_secure_password'
 
 
-user = {'username': 'jose', 'access_level': 'guest'}
+
+user = {'username': 'jose', 'access_level': 'admin'}
 
 print(
-    get_admin_password()
+    get_admin_password('billing')
 )
 
 print(get_admin_password.__name__)
