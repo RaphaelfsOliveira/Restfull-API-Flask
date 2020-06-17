@@ -54,13 +54,33 @@ app.add_url_rule('/stores/<name>/', view_func=stores_view, methods=['GET'])
 class StoresItemsAPI(MethodView):
 
     def get(self, name, item=None):
-        if item is None:
-            return 'list of items'
-        else:
-            return 'one items'
+        for store in stores:
+            if name == store['name']:
+                if item is None:
+                    return jsonify({'items': store['items']})
+                else:
+                    for store_item in store['items']:
+                        if item == store_item['name']:
+                            return jsonify(store_item)
+                        else:
+                            return jsonify({'error': 'item not found'})
+            else:
+                return jsonify({'error': 'store not found'})
     
     def post(self, name):
-        return 'create one item'
+        for store in stores:
+            if name == store['name']:
+                request_data = request.get_json()
+
+                new_item = {
+                    "name": request_data['name'],
+                    "price": request_data['price']
+                }
+                store['items'].append(new_item)
+
+                return jsonify(new_item)
+            else:
+                return jsonify({'error': 'store not found'})
 
 stores_items_view = StoresItemsAPI.as_view('items')
 app.add_url_rule('/stores/<name>/items/', view_func=stores_items_view, methods=['GET', 'POST'])
