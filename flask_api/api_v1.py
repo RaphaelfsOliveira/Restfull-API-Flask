@@ -12,7 +12,7 @@ def home():
 
 stores = [
     {
-        'name': 'Max Store',
+        'name': 'The Store',
         'items': [
             {
                 'name': 'My item',
@@ -37,14 +37,16 @@ class StoresAPI(MethodView):
 
     def post(self):
         request_data = request.get_json()
-        
-        new_store = {
-            "name": request_data['name'],
-            "items": []
-        }
-        stores.append(new_store)
+        if request_data:
+            new_store = {
+                "name": request_data['name'],
+                "items": []
+            }
+            stores.append(new_store)
 
-        return jsonify(new_store)
+            return jsonify(new_store)
+        
+        return jsonify({'error': 'need store data'}), 500
 
 stores_view = StoresAPI.as_view('stores')
 app.add_url_rule('/stores/', view_func=stores_view, methods=['GET', 'POST'])
@@ -71,14 +73,17 @@ class StoresItemsAPI(MethodView):
         for store in stores:
             if name == store['name']:
                 request_data = request.get_json()
+                if request_data:
 
-                new_item = {
-                    "name": request_data['name'],
-                    "price": request_data['price']
-                }
-                store['items'].append(new_item)
+                    new_item = {
+                        "name": request_data['name'],
+                        "price": request_data['price']
+                    }
+                    store['items'].append(new_item)
 
-                return jsonify(new_item)
+                    return jsonify(new_item)
+                
+                return jsonify({'error': 'need item data'}), 500
 
         return jsonify({'error': 'store not found'}), 404
 
