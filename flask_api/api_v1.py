@@ -28,12 +28,12 @@ class StoresAPI(MethodView):
     def get(self, name=None):
         if name is None:
             return jsonify({'stores': stores})
-        else:
-            for store in stores:
-                if name == store['name']:
-                    return jsonify(store)
-                else:
-                    return jsonify({'error': 'store not found'})
+        
+        for store in stores:
+            if name == store['name']:
+                return jsonify(store)
+            
+        return jsonify({'error': 'store not found'})
 
     def post(self):
         request_data = request.get_json()
@@ -58,14 +58,14 @@ class StoresItemsAPI(MethodView):
             if name == store['name']:
                 if item is None:
                     return jsonify({'items': store['items']})
-                else:
-                    for store_item in store['items']:
-                        if item == store_item['name']:
-                            return jsonify(store_item)
-                        else:
-                            return jsonify({'error': 'item not found'})
-            else:
-                return jsonify({'error': 'store not found'})
+                
+                for store_item in store['items']:
+                    if item == store_item['name']:
+                        return jsonify(store_item)
+
+                return jsonify({'error': 'item not found'})
+        
+        return jsonify({'error': 'store not found'})
     
     def post(self, name):
         for store in stores:
@@ -79,8 +79,8 @@ class StoresItemsAPI(MethodView):
                 store['items'].append(new_item)
 
                 return jsonify(new_item)
-            else:
-                return jsonify({'error': 'store not found'})
+
+        return jsonify({'error': 'store not found'})
 
 stores_items_view = StoresItemsAPI.as_view('items')
 app.add_url_rule('/stores/<name>/items/', view_func=stores_items_view, methods=['GET', 'POST'])
