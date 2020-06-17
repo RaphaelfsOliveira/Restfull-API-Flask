@@ -33,7 +33,7 @@ class StoresAPI(MethodView):
             if name == store['name']:
                 return jsonify(store)
             
-        return jsonify({'error': 'store not found'})
+        return jsonify({'error': 'store not found'}), 404
 
     def post(self):
         request_data = request.get_json()
@@ -63,9 +63,9 @@ class StoresItemsAPI(MethodView):
                     if item == store_item['name']:
                         return jsonify(store_item)
 
-                return jsonify({'error': 'item not found'})
+                return jsonify({'error': 'item not found'}), 404
         
-        return jsonify({'error': 'store not found'})
+        return jsonify({'error': 'store not found'}), 404
     
     def post(self, name):
         for store in stores:
@@ -80,7 +80,7 @@ class StoresItemsAPI(MethodView):
 
                 return jsonify(new_item)
 
-        return jsonify({'error': 'store not found'})
+        return jsonify({'error': 'store not found'}), 404
 
 stores_items_view = StoresItemsAPI.as_view('items')
 app.add_url_rule('/stores/<name>/items/', view_func=stores_items_view, methods=['GET', 'POST'])
