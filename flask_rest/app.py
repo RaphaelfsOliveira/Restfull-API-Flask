@@ -45,14 +45,14 @@ class Item(Resource):
         item = next(filter(lambda key: key['name'] == name, items), None)
         if item:
             items.remove(item)
-            return {'message': 'item removed'}
+            return {'message': 'item delete'}
         
         return {'message': 'item not found'}, 404
 
 
 class ItemListCreateUpdate(Resource):
 
-    @jwt_required()
+    # @jwt_required()
     def get(self):
         return {
             'items': items,
