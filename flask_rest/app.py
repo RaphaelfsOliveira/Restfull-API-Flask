@@ -1,6 +1,6 @@
 from flask import Flask, request
 from flask_restful import Resource, Api
-from flask_jwt import JWT
+from flask_jwt import JWT, jwt_required
 
 from security import authenticate, identity
 
@@ -51,7 +51,8 @@ class Item(Resource):
 
 
 class ItemListCreateUpdate(Resource):
-    
+
+    @jwt_required()
     def get(self):
         return {
             'items': items,
