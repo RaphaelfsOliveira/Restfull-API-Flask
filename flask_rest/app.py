@@ -32,17 +32,20 @@ items = [
     }
 ]
 
+def get_item(name):
+    return next(filter(lambda key: key['name'] == name, items), None)
+
 class Item(Resource):
-    
+
     def get(self, name=None):
-        item = next(filter(lambda key: key['name'] == name, items), None)
+        item = get_item(name)
         if item:
             return {'item': item}, 200
          
         return {'message': 'item not found'}, 404
     
     def delete(self, name):
-        item = next(filter(lambda key: key['name'] == name, items), None)
+        item = get_item(name)
         if item:
             items.remove(item)
             return {'message': 'item delete'}
@@ -62,13 +65,15 @@ class ItemListCreateUpdate(Resource):
     def post(self):
         data = request.get_json()
         if data:
-            if next(filter(lambda key: key['name'] == data['name'], items), None):
+            if get_item(data['name']):
                 return {'message': 'An item with name {} already exists'.format(data['name'])}, 400
-
-            items.append({
+            
+            new_item = {
                 'name': data['name'],
                 'price': data['price']
-            })
+            }
+            items.append(new_item)
+
             return new_item, 201
         
         return {'message': 'item need some name and price'}, 500
@@ -76,7 +81,7 @@ class ItemListCreateUpdate(Resource):
     def put(self):
         data = request.get_json()
         if data:
-            item = next(filter(lambda key: key['name'] == name, items), None)
+            item = get_item(data['name'])
             if item:
                 item.update(data)
                 return data    
