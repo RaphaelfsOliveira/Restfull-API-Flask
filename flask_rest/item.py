@@ -44,6 +44,14 @@ class Item:
             raise error
     
     @classmethod
+    def update(cls, price, _id):
+        try:
+            query = "UPDATE items SET price=? WHERE id=?"
+            db_manage(make_query, query, price, _id)
+        except Exception as error:
+            raise error
+    
+    @classmethod
     def delete(cls, name):
         try:
             query = "DELETE FROM items WHERE name=?"
@@ -94,11 +102,12 @@ class ItemListCreateUpdate(Resource):
     def put(self):
         data = request.get_json()
         if data:
-            if get_item(data.get('name')):
-                item.update(data)
-                return data
+            item = Item.search_name(data.get('name'))
+            if item:
+                Item.update(data['price'], item.id)
+                return {'message': 'item updated'}
                 
-            items.append(data)
+            Item.create(data)
             return data, 201
 
         return {'message': 'item need some name and price'}, 500
