@@ -1,4 +1,7 @@
 import sqlite3
+from flask_restful import Resource
+from flask import request
+from db_connection import select_query, create_query, select_query_all
 
 
 class User:
@@ -10,30 +13,43 @@ class User:
     
     @classmethod
     def find_by_username(cls, username):
-        connection = sqlite3.connect('data.db')
-        cursor = connection.cursor()
         user = None
 
         query = "SELECT * FROM users WHERE username=?"
-        result = cursor.execute(query, (username,))
+        result = select_query(query, username)
+        if result: user = cls(*result)
         
-        row = result.fetchone()
-        if row: user = cls(*row)
-        
-        connection.close()
         return user
     
     @classmethod
     def find_by_id(cls, _id):
-        connection = sqlite3.connect('data.db')
-        cursor = connection.cursor()
         user = None
 
         query = "SELECT * FROM users WHERE id=?"
-        result = cursor.execute(query, (_id,))
+        result = select_query(query, _id)
+        if result: user = cls(*result)
         
-        row = result.fetchone()
-        if row: user = cls(*row)
-        
-        connection.close()
         return user
+
+
+class UserRegister(Resource):
+    
+    def post(self):
+        data = request.get_json()
+        if data:
+            query = "INSERT INTO users VALUES (NULL, ?, ?)"
+            create_query(query, data['username'], data['password'])
+            
+            return {'message': 'user created successfully'}, 201    
+        
+        return {'message': 'need user and password'}, 500
+
+
+class UserResource(Resource):
+
+    def get(self):
+        query = "SELECT * FROM users"
+        result = select_query_all(query)
+        return result
+
+        

@@ -3,6 +3,7 @@ from flask_restful import Resource, Api
 from flask_jwt import JWT, jwt_required
 
 from security import authenticate, identity
+from user import UserRegister, UserResource
 
 app = Flask(__name__)
 app.secret_key = 'password'
@@ -94,4 +95,6 @@ class ItemListCreateUpdate(Resource):
 
 api.add_resource(ItemListCreateUpdate, '/items')
 api.add_resource(Item, '/items/<string:name>')
+api.add_resource(UserRegister, '/register')
+api.add_resource(UserResource, '/users')
 
