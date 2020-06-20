@@ -1,7 +1,7 @@
 from flask_restful import Resource
 from flask import request
 from db_connection import *
-
+from models.user import User
 
 class UserRegister(Resource):
     
