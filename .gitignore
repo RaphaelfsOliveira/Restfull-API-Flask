@@ -139,3 +139,4 @@ cython_debug/
 
 # machine
 .DS_Store
+*.db
