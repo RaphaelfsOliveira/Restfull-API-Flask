@@ -44,7 +44,7 @@ class Item:
             raise error
     
     @classmethod
-    def update(cls, price, _id):
+    def insert(cls, price, _id):
         try:
             query = "UPDATE items SET price=? WHERE id=?"
             db_manage(make_query, query, price, _id)
@@ -104,7 +104,7 @@ class ItemListCreateUpdate(Resource):
         if data:
             item = Item.search_name(data.get('name'))
             if item:
-                Item.update(data['price'], item.id)
+                Item.insert(data['price'], item.id)
                 return {'message': 'item updated'}
                 
             Item.create(data)
