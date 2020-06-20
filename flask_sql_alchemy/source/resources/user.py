@@ -22,11 +22,12 @@ class UserRegister(Resource):
 class UserResource(Resource):
 
     def get(self):
-        query = "SELECT * FROM users"
-        result = db_manage(select_query_all, query)
-        if result:
-            users = [{'id': user[0], 'name': user[1], 'password': user[2]} for user in result]
-            return {'users': users, 'count': len(users)}
+        users = User.get_all()
+        if users:
+            return {
+                'users': [user.__dict__ for user in users],
+                'count': len(users)
+            }
         
         return {'message': "don't have users"}, 500
 

@@ -33,7 +33,6 @@ class ItemListCreateUpdate(Resource):
     
     def post(self):
         data = request.get_json()
-        print(data, Item.search_name(data.get('name')))
         if data:
             if Item.search_name(data.get('name')):
                 return {'message': 'An item with name {} already exists'.format(data['name'])}, 400

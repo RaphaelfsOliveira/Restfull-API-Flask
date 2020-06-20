@@ -29,6 +29,16 @@ class User:
         return user
     
     @classmethod
+    def get_all(cls):
+        users = None
+        
+        query = "SELECT * FROM users"
+        result = db_manage(select_query_all, query)
+        if result: users = [cls(*user) for user in result]
+
+        return users
+    
+    @classmethod
     def delete(cls, _id):
         try:
             query = "DELETE FROM users WHERE id=?"
