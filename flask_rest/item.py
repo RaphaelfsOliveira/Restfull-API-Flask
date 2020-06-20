@@ -15,7 +15,7 @@ class Item:
         self.price = price
 
     @classmethod
-    def find_by_name(cls, name):
+    def search_name(cls, name):
         item = None
 
         query = "SELECT * FROM items WHERE name=?"
@@ -25,7 +25,7 @@ class Item:
         return item
     
     @classmethod
-    def get_all_items(cls):
+    def get_all(cls):
         items = None
 
         query = "SELECT * FROM items"
@@ -56,7 +56,7 @@ class Item:
 class ItemResource(Resource):
 
     def get(self, name):
-        item = Item.find_by_name(name)
+        item = Item.search_name(name)
         if item:
             return item.__dict__
          
@@ -72,7 +72,7 @@ class ItemResource(Resource):
 class ItemListCreateUpdate(Resource):
 
     def get(self):
-        items = Item.get_all_items()
+        items = Item.get_all()
         if items:
             return {
                 'items': [item.__dict__ for item in items],
@@ -83,7 +83,7 @@ class ItemListCreateUpdate(Resource):
     
     def post(self):
         data = request.get_json()
-        if data and Item.find_by_name(data.get('name')):
+        if data and Item.search_name(data.get('name')):
             return {'message': 'An item with name {} already exists'.format(data['name'])}, 400
             
             Item.create(data)
