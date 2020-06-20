@@ -1,7 +1,7 @@
 import sqlite3
 from flask_restful import Resource
 from flask import request
-from db_connection import select_query, create_query, select_query_all
+from db_connection import select_query, create_query, select_query_all, db_manage
 
 
 class User:
@@ -16,7 +16,7 @@ class User:
         user = None
 
         query = "SELECT * FROM users WHERE username=?"
-        result = select_query(query, username)
+        result = db_manage(select_query, query, username)
         if result: user = cls(*result)
         
         return user
@@ -26,7 +26,7 @@ class User:
         user = None
 
         query = "SELECT * FROM users WHERE id=?"
-        result = select_query(query, _id)
+        result = db_manage(select_query, query, _id)
         if result: user = cls(*result)
         
         return user
@@ -38,7 +38,8 @@ class UserRegister(Resource):
         data = request.get_json()
         if data:
             query = "INSERT INTO users VALUES (NULL, ?, ?)"
-            create_query(query, data['username'], data['password'])
+            db_manage(create_query, query, data['username'], data['password'])
+
             
             return {'message': 'user created successfully'}, 201    
         
@@ -49,7 +50,11 @@ class UserResource(Resource):
 
     def get(self):
         query = "SELECT * FROM users"
-        result = select_query_all(query)
-        return result
+        result = db_manage(select_query_all, query)
+        if result:
+            users = [{'id': user[0], 'name': user[1], 'password': user[2]} for user in result]
+            return {'users': users, 'count': len(users)}
+        
+        return {'message': "don't have users"}, 500
 
         

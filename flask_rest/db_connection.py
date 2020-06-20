@@ -2,31 +2,25 @@ import sqlite3
 import functools
 
 
-def select_query(query, *args):
+def db_manage(func, query , *args):
     connection = sqlite3.connect('data.db')
     cursor = connection.cursor()
 
-    result = cursor.execute(query, (*args,))
-    row = result.fetchone()
+    result = func(query, *args, cursor=cursor, conn=connection)
 
     connection.close()
-    return row
+    return result
 
-def select_query_all(query, *args):
-    connection = sqlite3.connect('data.db')
-    cursor = connection.cursor()
+def create_query(query, *args, **kwargs):
+    kwargs['cursor'].execute(query, (*args,))
+    kwargs['conn'].commit()
 
-    result = cursor.execute(query)
-    row = result.fetchall()
+def select_query(query, *args, **kwargs):
+    result = kwargs['cursor'].execute(query, (*args,))
+    result = result.fetchone()
+    return result
 
-    connection.close()
-    return row
-
-def create_query(query, *args):
-    connection = sqlite3.connect('data.db')
-    cursor = connection.cursor()
-
-    result = cursor.execute(query, (*args,))
-    
-    connection.commit()    
-    connection.close()
+def select_query_all(query, *args, **kwargs):
+    result = kwargs['cursor'].execute(query)
+    result = result.fetchall()
+    return result
