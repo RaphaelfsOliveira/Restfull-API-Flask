@@ -37,11 +37,10 @@ class Item:
         except Exception as error:
             raise error
     
-    @classmethod
-    def insert(cls, price, _id):
+    def insert(self, price):
         try:
             query = "UPDATE items SET price=? WHERE id=?"
-            db_manage(make_query, query, price, _id)
+            db_manage(make_query, query, price, self.id)
         except Exception as error:
             raise error
     
