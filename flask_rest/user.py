@@ -37,9 +37,11 @@ class UserRegister(Resource):
     def post(self):
         data = request.get_json()
         if data:
+            if User.find_by_username(data['username']):
+                return {'message': 'The user {} already exists'.format(data['username'])}, 400
+
             query = "INSERT INTO users VALUES (NULL, ?, ?)"
             db_manage(create_query, query, data['username'], data['password'])
-
             
             return {'message': 'user created successfully'}, 201    
         
