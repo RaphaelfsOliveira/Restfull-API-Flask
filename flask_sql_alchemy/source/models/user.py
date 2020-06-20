@@ -39,6 +39,14 @@ class User:
         return users
     
     @classmethod
+    def insert(cls, username, password):
+        try:
+            query = "INSERT INTO users VALUES (NULL, ?, ?)"
+            db_manage(make_query, query, username, password)
+        except Exception as error:
+            raise error
+    
+    @classmethod
     def delete(cls, _id):
         try:
             query = "DELETE FROM users WHERE id=?"

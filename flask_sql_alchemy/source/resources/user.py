@@ -11,9 +11,7 @@ class UserRegister(Resource):
             if User.find_by_username(data['username']):
                 return {'message': 'The user {} already exists'.format(data['username'])}, 400
 
-            query = "INSERT INTO users VALUES (NULL, ?, ?)"
-            db_manage(make_query, query, data['username'], data['password'])
-
+            User.insert(data['username'], data['password'])
             return {'message': 'user created successfully'}, 201    
         
         return {'message': 'need user and password'}, 500
