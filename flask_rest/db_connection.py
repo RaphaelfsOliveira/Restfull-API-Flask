@@ -11,7 +11,7 @@ def db_manage(func, query , *args):
     connection.close()
     return result
 
-def create_query(query, *args, **kwargs):
+def make_query(query, *args, **kwargs):
     kwargs['cursor'].execute(query, (*args,))
     kwargs['conn'].commit()
 

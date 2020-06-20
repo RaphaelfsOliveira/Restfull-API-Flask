@@ -1,7 +1,6 @@
-import sqlite3
 from flask_restful import Resource
 from flask import request
-from db_connection import select_query, create_query, select_query_all, db_manage
+from db_connection import *
 
 
 class User:
@@ -41,8 +40,8 @@ class UserRegister(Resource):
                 return {'message': 'The user {} already exists'.format(data['username'])}, 400
 
             query = "INSERT INTO users VALUES (NULL, ?, ?)"
-            db_manage(create_query, query, data['username'], data['password'])
-            
+            db_manage(make_query, query, data['username'], data['password'])
+
             return {'message': 'user created successfully'}, 201    
         
         return {'message': 'need user and password'}, 500
