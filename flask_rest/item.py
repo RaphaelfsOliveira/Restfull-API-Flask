@@ -83,9 +83,8 @@ class ItemListCreateUpdate(Resource):
     
     def post(self):
         data = request.get_json()
-        if data:
-            if Item.find_by_name(data['name']):
-                return {'message': 'An item with name {} already exists'.format(data['name'])}, 400
+        if data and Item.find_by_name(data.get('name')):
+            return {'message': 'An item with name {} already exists'.format(data['name'])}, 400
             
             Item.create(data)
             return {'message': 'item created successfully'}, 201
@@ -95,10 +94,9 @@ class ItemListCreateUpdate(Resource):
     def put(self):
         data = request.get_json()
         if data:
-            item = get_item(data['name'])
-            if item:
+            if get_item(data.get('name')):
                 item.update(data)
-                return data    
+                return data
                 
             items.append(data)
             return data, 201
