@@ -29,6 +29,15 @@ class User:
         if result: user = cls(*result)
         
         return user
+    
+    @classmethod
+    def delete(cls, _id):
+        try:
+            query = "DELETE FROM users WHERE id=?"
+            db_manage(make_query, query, _id)
+            return True
+        except Exception as error:
+            raise error
 
 
 class UserRegister(Resource):
@@ -58,4 +67,10 @@ class UserResource(Resource):
         
         return {'message': "don't have users"}, 500
 
+class UserGetDelete(Resource):
+
+    def delete(self, _id):
+        if User.delete(_id):
+            return {'message': 'user deleted'}
         
+        return {'message': 'user not found'}, 404
