@@ -13,6 +13,10 @@ app.secret_key = 'password'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+@app.before_first_request
+def create_tables():
+    db.create_all()
+
 api = Api(app)
 jwt = JWT(app, authenticate, identity)
 
