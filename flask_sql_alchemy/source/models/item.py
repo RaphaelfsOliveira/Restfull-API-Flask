@@ -15,48 +15,23 @@ class Item(db.Model):
         self.id = _id
         self.name = name
         self.price = price
+    
+    def to_json(self):
+        return {'id': self.id, 'name': self.name, 'price': self.price}
 
     @classmethod
     def search_name(cls, name):
-        item = None
-
-        query = "SELECT * FROM items WHERE name=?"
-        result = db_manage(select_query, query, name)
-        if result: item = cls(*result)
-
-        return item
+        return cls.query.filter_by(name=name).first()
     
     @classmethod
-    def get_all(cls):
-        items = None
-
-        query = "SELECT * FROM items"
-        result = db_manage(select_query_all, query)
-        if result: items = [cls(*item) for item in result]
+    def _all(cls):
+        return cls.query.all()
+    
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
         
-        return items
-    
-    @classmethod
-    def create(cls, data):
-        try:
-            query = "INSERT INTO items VALUES (NULL, ?, ?)"
-            db_manage(make_query, query, data['name'], data['price'])
-            return True
-        except Exception as error:
-            raise error
-    
-    def insert(self, price):
-        try:
-            query = "UPDATE items SET price=? WHERE id=?"
-            db_manage(make_query, query, price, self.id)
-        except Exception as error:
-            raise error
-    
-    @classmethod
-    def delete(cls, name):
-        try:
-            query = "DELETE FROM items WHERE name=?"
-            db_manage(make_query, query, name)
-            return True
-        except Exception as error:
-            raise error

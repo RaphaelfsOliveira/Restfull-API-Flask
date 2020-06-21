@@ -8,12 +8,14 @@ class ItemResource(Resource):
     def get(self, name):
         item = Item.search_name(name)
         if item:
-            return item.__dict__
+            return item.to_json()
          
         return {'message': 'item not found'}, 404
     
     def delete(self, name):
-        if Item.delete(name):
+        item = Item.search_name(name)
+        if item:
+            item.delete()
             return {'message': 'item delete'}
 
         return {'message': 'item not found'}, 404
@@ -22,10 +24,10 @@ class ItemResource(Resource):
 class ItemListCreateUpdate(Resource):
 
     def get(self):
-        items = Item.get_all()
+        items = Item._all()
         if items:
             return {
-                'items': [item.__dict__ for item in items],
+                'items': [item.to_json() for item in items],
                 'count': len(items)
             }
         
@@ -37,7 +39,8 @@ class ItemListCreateUpdate(Resource):
             if Item.search_name(data.get('name')):
                 return {'message': 'An item with name {} already exists'.format(data['name'])}, 400
             
-            Item.create(data)
+            item = Item(None, **data)
+            item.save()
             return {'message': 'item created successfully'}, 201
         
         return {'message': 'item need some name and price'}, 500
@@ -47,10 +50,12 @@ class ItemListCreateUpdate(Resource):
         if data:
             item = Item.search_name(data.get('name'))
             if item:
-                item.insert(data['price'])
+                item.price = data['price']
+                item.save()
                 return {'message': 'item updated'}
                 
-            Item.create(data)
+            item = Item(None, **data)
+            item.save()
             return data, 201
 
         return {'message': 'item need some name and price'}, 500
