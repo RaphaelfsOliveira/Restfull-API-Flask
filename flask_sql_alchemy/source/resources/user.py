@@ -11,7 +11,8 @@ class UserRegister(Resource):
             if User.find_by_username(data['username']):
                 return {'message': 'The user {} already exists'.format(data['username'])}, 400
 
-            User.insert(data['username'], data['password'])
+            user = User(None, **data)
+            user.save()
             return {'message': 'user created successfully'}, 201    
         
         return {'message': 'need user and password'}, 500
@@ -20,10 +21,10 @@ class UserRegister(Resource):
 class UserResource(Resource):
 
     def get(self):
-        users = User.get_all()
+        users = User._all()
         if users:
             return {
-                'users': [user.__dict__ for user in users],
+                'users': [user.to_json() for user in users],
                 'count': len(users)
             }
         
@@ -32,7 +33,9 @@ class UserResource(Resource):
 class UserGetDelete(Resource):
 
     def delete(self, _id):
-        if User.delete(_id):
+        user = User.find_by_id(_id)
+        if user:
+            user.delete()
             return {'message': 'user deleted'}
         
         return {'message': 'user not found'}, 404

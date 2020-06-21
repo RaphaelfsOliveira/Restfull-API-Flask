@@ -17,49 +17,25 @@ class User(db.Model):
         self.username = username
         self.password = password
     
+    def to_json(self):
+        return {'id': self.id, 'username': self.username, 'password': self.password}
+    
     @classmethod
     def find_by_username(cls, username):
-        user = None
-
-        query = "SELECT * FROM users WHERE username=?"
-        result = db_manage(select_query, query, username)
-        if result: user = cls(*result)
-        
-        return user
+        return cls.query.filter_by(username=username).first()
     
     @classmethod
     def find_by_id(cls, _id):
-        user = None
-
-        query = "SELECT * FROM users WHERE id=?"
-        result = db_manage(select_query, query, _id)
-        if result: user = cls(*result)
-        
-        return user
+        return cls.query.filter_by(id=_id).first()
     
     @classmethod
-    def get_all(cls):
-        users = None
-        
-        query = "SELECT * FROM users"
-        result = db_manage(select_query_all, query)
-        if result: users = [cls(*user) for user in result]
-
-        return users
+    def _all(cls):
+        return cls.query.all()
     
-    @classmethod
-    def insert(cls, username, password):
-        try:
-            query = "INSERT INTO users VALUES (NULL, ?, ?)"
-            db_manage(make_query, query, username, password)
-        except Exception as error:
-            raise error
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
     
-    @classmethod
-    def delete(cls, _id):
-        try:
-            query = "DELETE FROM users WHERE id=?"
-            db_manage(make_query, query, _id)
-            return True
-        except Exception as error:
-            raise error
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
