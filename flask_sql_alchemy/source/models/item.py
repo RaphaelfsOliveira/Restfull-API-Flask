@@ -1,7 +1,15 @@
 from db_connection import *
+from db import db
 
+class Item(db.Model):
 
-class Item:
+    __tablename__ = 'items'
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    name = db.Column(db.String(100))
+
+    price = db.Column(db.Float(precision=2))
     
     def __init__(self, _id, name, price):
         self.id = _id
