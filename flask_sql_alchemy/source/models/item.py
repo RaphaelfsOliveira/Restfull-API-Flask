@@ -1,5 +1,5 @@
-from db_connection import *
 from db import db
+
 
 class Item(db.Model):
 
