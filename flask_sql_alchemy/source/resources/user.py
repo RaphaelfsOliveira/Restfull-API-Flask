@@ -11,7 +11,7 @@ class UserRegister(Resource):
             if User.find_by_username(data['username']):
                 return {'message': 'The user {} already exists'.format(data['username'])}, 400
 
-            user = User(None, **data)
+            user = User(**data)
             user.save()
             return {'message': 'user created successfully'}, 201    
         

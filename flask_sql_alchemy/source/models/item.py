@@ -11,8 +11,7 @@ class Item(db.Model):
 
     price = db.Column(db.Float(precision=2))
     
-    def __init__(self, _id, name, price):
-        self.id = _id
+    def __init__(self, name, price):
         self.name = name
         self.price = price
     

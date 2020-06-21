@@ -39,7 +39,7 @@ class ItemListCreateUpdate(Resource):
             if Item.search_name(data.get('name')):
                 return {'message': 'An item with name {} already exists'.format(data['name'])}, 400
             
-            item = Item(None, **data)
+            item = Item(**data)
             item.save()
             return {'message': 'item created successfully'}, 201
         
@@ -54,7 +54,7 @@ class ItemListCreateUpdate(Resource):
                 item.save()
                 return {'message': 'item updated'}
                 
-            item = Item(None, **data)
+            item = Item(**data)
             item.save()
             return data, 201
 
