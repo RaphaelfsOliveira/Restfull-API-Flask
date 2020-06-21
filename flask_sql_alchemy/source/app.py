@@ -6,6 +6,7 @@ from db import db
 from security import authenticate, identity
 from resources.user import UserRegister, UserResource, UserGetDelete
 from resources.item import ItemResource, ItemListCreateUpdate
+from resources.store import StoreResource, StoreResourceArgs
 
 app = Flask(__name__)
 app.secret_key = 'password'
@@ -20,10 +21,13 @@ def create_tables():
 api = Api(app)
 jwt = JWT(app, authenticate, identity)
 
+api.add_resource(StoreResource, '/stores')
+api.add_resource(StoreResourceArgs, '/stores/<string:name>')
 api.add_resource(ItemListCreateUpdate, '/items')
 api.add_resource(ItemResource, '/items/<string:name>')
-api.add_resource(UserRegister, '/register')
+
 api.add_resource(UserResource, '/users')
+api.add_resource(UserRegister, '/register')
 api.add_resource(UserGetDelete, '/users/<int:_id>')
 
 

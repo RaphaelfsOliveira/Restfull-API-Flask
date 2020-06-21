@@ -24,7 +24,7 @@ class UserResource(Resource):
         users = User._all()
         if users:
             return {
-                'users': [user.to_json() for user in users],
+                'users': [user.json() for user in users],
                 'count': len(users)
             }
         

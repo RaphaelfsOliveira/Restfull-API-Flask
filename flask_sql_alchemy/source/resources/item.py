@@ -8,7 +8,7 @@ class ItemResource(Resource):
     def get(self, name):
         item = Item.search_name(name)
         if item:
-            return item.to_json()
+            return item.json()
          
         return {'message': 'item not found'}, 404
     
@@ -27,7 +27,7 @@ class ItemListCreateUpdate(Resource):
         items = Item._all()
         if items:
             return {
-                'items': [item.to_json() for item in items],
+                'items': [item.json() for item in items],
                 'count': len(items)
             }
         
